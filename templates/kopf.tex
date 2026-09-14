@@ -1,0 +1,57 @@
+% Layout des Druckhandbuchs. Wird von Quarto und vom pandoc-Fallback geladen.
+% Hier wird das Corporate Design gepflegt - nicht in den Markdown-Dateien.
+
+\usepackage{scrlayer-scrpage}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{microtype}
+
+% --- Farben ----------------------------------------------------------------
+\definecolor{humbeeBlau}{HTML}{1D4ED8}
+\definecolor{humbeeDunkel}{HTML}{0F172A}
+\definecolor{humbeeGrau}{HTML}{64748B}
+\definecolor{humbeeLinie}{HTML}{D8DEE7}
+
+% --- Kopf- und Fußzeile ----------------------------------------------------
+\pagestyle{scrheadings}
+\clearpairofpagestyles
+\automark[section]{chapter}
+\ihead*{\small\color{humbeeGrau}\headmark}
+\ohead*{\small\color{humbeeGrau}\manualtitel}
+\ifoot*{\small\color{humbeeGrau}\manualversion}
+\ofoot*{\small\color{humbeeDunkel}\pagemark}
+\setkomafont{pageheadfoot}{\normalfont\sffamily}
+\KOMAoptions{headsepline=0.4pt}
+\addtokomafont{headsepline}{\color{humbeeLinie}}
+
+% --- Überschriften ---------------------------------------------------------
+\addtokomafont{disposition}{\color{humbeeDunkel}}
+\addtokomafont{chapter}{\color{humbeeBlau}\fontsize{26}{30}\selectfont}
+\addtokomafont{section}{\fontsize{16}{19}\selectfont}
+\addtokomafont{subsection}{\fontsize{13}{16}\selectfont}
+\RedeclareSectionCommand[beforeskip=-1.5\baselineskip,afterskip=1.2\baselineskip]{chapter}
+
+% --- Abbildungen -----------------------------------------------------------
+\usepackage[font=small,labelfont={bf,color=humbeeBlau},labelsep=period,
+            justification=raggedright,singlelinecheck=false,skip=6pt]{caption}
+\renewcommand{\figurename}{Abbildung}
+\renewcommand{\tablename}{Tabelle}
+\renewcommand{\listfigurename}{Abbildungsverzeichnis}
+\renewcommand{\contentsname}{Inhalt}
+
+% Screenshots bekommen einen dezenten Rahmen, damit helle Oberflächen
+% nicht mit dem Papier verschwimmen.
+\usepackage[export]{adjustbox}
+\let\origincludegraphics\includegraphics
+\renewcommand{\includegraphics}[2][]{%
+  \origincludegraphics[#1,cfbox=humbeeLinie 0.4pt 0pt]{#2}}
+
+% --- Listen und Tabellen ---------------------------------------------------
+\setlist[enumerate]{itemsep=2pt,topsep=4pt}
+\setlist[itemize]{itemsep=2pt,topsep=4pt}
+\renewcommand{\arraystretch}{1.25}
+
+% --- Links -----------------------------------------------------------------
+\AtBeginDocument{\hypersetup{colorlinks=true,linkcolor=humbeeBlau,urlcolor=humbeeBlau,
+            citecolor=humbeeBlau,pdfborder={0 0 0}}}

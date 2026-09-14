@@ -1,0 +1,8 @@
+build/
+dist/
+.quarto/
+__pycache__/
+*.pyc
+.venv/
+.vs/
+*.user

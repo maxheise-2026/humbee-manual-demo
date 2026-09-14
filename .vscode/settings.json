@@ -1,0 +1,18 @@
+{
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "cSpell.language": "de,en",
+  "[markdown]": {
+    "editor.wordWrap": "bounded",
+    "editor.wordWrapColumn": 95,
+    "editor.rulers": [95],
+    "editor.quickSuggestions": { "other": true }
+  },
+  "markdownlint.config": {
+    "MD013": false,
+    "MD033": false,
+    "MD041": false
+  },
+  "search.exclude": { "build/**": true, "dist/**": true }
+}

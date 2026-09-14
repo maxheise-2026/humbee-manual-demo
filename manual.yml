@@ -1,0 +1,33 @@
+# Zentrale Konfiguration für beide Builds.
+# Diese Datei ist die einzige Stelle, an der Titel, Version und Endpunkte stehen.
+
+manual:
+  title: "humbee Handbuch"
+  subtitle: "Anwenderhandbuch"
+  version: "2026.9"
+  publisher: "humbee solutions GmbH"
+  language: "de"
+  # Erscheint auf dem Deckblatt und in jeder Fußzeile des PDFs.
+  stand_hinweis: "Stand der Dokumentation – spätere Programmversionen können abweichen."
+
+wiki:
+  # Kennung dieser Quelle im LLM-Wiki. Der Ingest-Agent erkennt daran,
+  # welche Seiten aus diesem Repo stammen (und welche er löschen darf).
+  source: "humbee-manual"
+  # Jede Seiten-ID wird im Wiki mit diesem Präfix adressiert.
+  id_prefix: "humbee-manual/"
+  # Namen der Umgebungsvariablen (die Werte liegen in GitHub Secrets).
+  endpoint_env: "HUMBEE_INGEST_ENDPOINT"
+  token_env: "HUMBEE_INGEST_TOKEN"
+
+print:
+  # quarto = empfohlen (muss installiert sein) | pandoc = Fallback ohne Quarto
+  engine: "quarto"
+  paper: "a4"
+  toc_depth: 2
+  # Schriften. Unter Windows z.B. "Segoe UI" / "Consolas",
+  # in der GitHub-Action "Carlito" / "DejaVu Sans Mono" (dort vorinstalliert).
+  schrift: "Carlito"
+  schrift_mono: "DejaVu Sans Mono"
+  # Seiten mit diesem Status landen NICHT im PDF und nicht im Wiki.
+  entwurf_ausschliessen: true
