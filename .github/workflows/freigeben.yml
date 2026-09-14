@@ -1,8 +1,7 @@
 name: Handbuch freigeben
 
-# Läuft erst, wenn ein Pull Request nach main gemerged wurde - also nach
-# bestandenem Review. Erst dann erfährt der Ingest-Agent von Änderungen und
-# erst dann entsteht ein verbindliches PDF.
+# Läuft nach dem Merge nach main. Der Wiki-Teil wird übersprungen, solange
+# kein Ingest-Endpunkt hinterlegt ist - das PDF entsteht trotzdem.
 
 on:
   push:
@@ -24,6 +23,12 @@ permissions:
 jobs:
   freigeben:
     runs-on: ubuntu-latest
+
+    # Auf Job-Ebene, damit die Werte auch im "if:" der Schritte lesbar sind.
+    env:
+      HUMBEE_INGEST_ENDPOINT: ${{ secrets.HUMBEE_INGEST_ENDPOINT }}
+      HUMBEE_INGEST_TOKEN: ${{ secrets.HUMBEE_INGEST_TOKEN }}
+
     steps:
       - uses: actions/checkout@v4
 
@@ -35,17 +40,23 @@ jobs:
       - name: Inhalte prüfen
         run: python scripts/validate.py
 
-      # --- Teil 1: LLM-Wiki -------------------------------------------------
+      # --- Teil 1: LLM-Wiki, nur wenn der Agent angebunden ist -------------
       - name: Ingest-Paket bauen
         run: python scripts/build_wiki.py
 
+      - name: Wiki-Auslieferung übersprungen
+        if: env.HUMBEE_INGEST_ENDPOINT == ''
+        run: |
+          echo "::notice::Kein Ingest-Endpunkt hinterlegt - Wiki-Auslieferung übersprungen."
+          echo "Diese Änderungen bleiben offen:"
+          cat build/wiki/changes.json
+
       - name: Änderungen an den Ingest-Agenten melden
-        env:
-          HUMBEE_INGEST_ENDPOINT: ${{ secrets.HUMBEE_INGEST_ENDPOINT }}
-          HUMBEE_INGEST_TOKEN: ${{ secrets.HUMBEE_INGEST_TOKEN }}
+        if: env.HUMBEE_INGEST_ENDPOINT != ''
         run: python scripts/push_ingest.py
 
       - name: Ausgelieferten Stand festschreiben
+        if: env.HUMBEE_INGEST_ENDPOINT != ''
         run: |
           if [ -n "$(git status --porcelain state/)" ]; then
             git config user.name  "github-actions[bot]"
@@ -72,7 +83,6 @@ jobs:
           path: dist/*.pdf
           retention-days: 90
 
-      # Ein Tag wie v2026.9 erzeugt zusätzlich ein dauerhaftes Release.
       - name: Release anlegen
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
